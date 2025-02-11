@@ -1,0 +1,48 @@
+# === OS 관련 ===
+.DS_Store         # macOS
+Thumbs.db         # Windows
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# === Java 관련 ===
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.iml
+
+# === Gradle 관련 ===
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar  # Gradle Wrapper는 버전 관리 필요
+**/build/
+
+# === Maven 관련 ===
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# === IDE 설정 파일 ===
+# IntelliJ IDEA
+.idea/
+*.iws
+*.ipr
+*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# === 환경 변수 및 민감 정보 ===
+*.env
