@@ -3,10 +3,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://studentvote2.cz4muuwq2azg.ap-northeast-2.rds.amazonaws.com:3306/studentvote?serverTimezone=Asia/Seoul
+    username: admin
+    password: studentvote!
+  sql:
+    init:
+      platform: mysql
 
   h2:
     console:
@@ -15,7 +18,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
 kakao:
