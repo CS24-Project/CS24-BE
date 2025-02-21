@@ -31,4 +31,8 @@ public class QuizChoice {
 
     @Column
     private String commentary;
+
+    public boolean isCorrect() {
+        return this.isCorrect;
+    }
 }

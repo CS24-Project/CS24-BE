@@ -1,5 +1,6 @@
 package com.example.csdaily.quiz.entity;
 
+import com.example.csdaily.quiz.dto.request.UserAnswerDto;
 import com.example.csdaily.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,10 +23,10 @@ public class UserAnswer {
     private User user;
 
     @JoinColumn
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Quiz quiz;
 
     @JoinColumn
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private QuizChoice choice;
 }
