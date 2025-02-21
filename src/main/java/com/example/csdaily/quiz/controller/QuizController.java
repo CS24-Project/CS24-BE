@@ -1,6 +1,6 @@
 package com.example.csdaily.quiz.controller;
 
-import com.example.csdaily.quiz.dto.QuizResponseDto;
+import com.example.csdaily.quiz.dto.response.QuizDto;
 import com.example.csdaily.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @GetMapping
-    public ResponseEntity<List<QuizResponseDto>> getDailyQuizzes() {
-        return ResponseEntity.ok(quizService.getDailyQuizzes().stream().map(QuizResponseDto::fromQuiz).toList());
+    public ResponseEntity<List<QuizDto>> getDailyQuizzes() {
+        return ResponseEntity.ok(quizService.getDailyQuizzes().stream().map(QuizDto::fromQuiz).toList());
     }
 }

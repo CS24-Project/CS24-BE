@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserQuizChoice {
+public class UserAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
