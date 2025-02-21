@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Quiz {
     private Long id;
 
     @Column
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Column
     private String content;
@@ -33,9 +34,6 @@ public class Quiz {
     @Convert(converter= QuizDifficultyConverter.class)
     private QuizDifficulty difficulty;
 
-    @Column
-    private Integer correctAnswerNumber;
-
-    @OneToMany
+    @OneToMany(mappedBy = "quiz")
     private List<QuizChoice> choices;
 }

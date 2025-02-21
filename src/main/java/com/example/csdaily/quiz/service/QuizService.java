@@ -10,7 +10,7 @@ import com.example.csdaily.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,7 +25,7 @@ public class QuizService {
                 .builder()
                 .content("다음 중 운영체제(OS)에서 멀티프로세싱(Multiprocessing)에 대한 설명으로 올바른 것은?")
                 .hint("이 방식은 여러 개의 코어를 활용하는 것이므로, 단일 코어에서 여러 프로세스를 실행하는 방식은 아닙니다.")
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDate.now())
                 .difficulty(QuizDifficulty.NORMAL)
                 .build();
         quizRepository.save(quiz);
@@ -46,7 +46,7 @@ public class QuizService {
     }
 
     public List<Quiz> getDailyQuiz() {
-        return null;
+        return quizRepository.findAllInCreatedAtEquals(LocalDate.now());
     }
 }
 
