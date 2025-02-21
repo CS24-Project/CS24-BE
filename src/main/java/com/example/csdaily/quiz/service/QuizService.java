@@ -13,7 +13,7 @@ import java.util.List;
 public class QuizService {
     private final QuizRepository quizRepository;
 
-    public List<Quiz> getDailyQuiz() {
+    public List<Quiz> getDailyQuizzes() {
         return quizRepository.findAllInCreatedAtEquals(LocalDate.now());
     }
 }

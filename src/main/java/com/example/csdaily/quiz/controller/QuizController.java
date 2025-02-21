@@ -16,9 +16,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @GetMapping
-    public ResponseEntity<List<QuizResponseDto>> getDailyQuiz() {
-        List<Quiz> quizzes = quizService.getDailyQuiz();
-        List<QuizResponseDto> quizResponseDtos = quizzes.stream().map(QuizResponseDto::fromQuiz).toList();
-        return ResponseEntity.ok(quizResponseDtos);
+    public ResponseEntity<List<QuizResponseDto>> getDailyQuizzes() {
+        return ResponseEntity.ok(quizService.getDailyQuizzes().stream().map(QuizResponseDto::fromQuiz).toList());
     }
 }
