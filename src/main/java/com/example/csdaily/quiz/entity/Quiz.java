@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -34,4 +35,7 @@ public class Quiz {
 
     @Column
     private Integer correctAnswerNumber;
+
+    @OneToMany
+    private List<QuizChoice> choices;
 }

@@ -44,5 +44,9 @@ public class QuizService {
                         .toList();
         return new QuizResponseDto(quiz.getId(), quiz.getContent(), quiz.getHint(), quiz.getDifficulty(), quizChoiceResponseDtos);
     }
+
+    public List<Quiz> getDailyQuiz() {
+        return null;
+    }
 }
 
