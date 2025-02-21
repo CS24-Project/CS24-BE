@@ -1,7 +1,6 @@
 package com.example.csdaily.quiz.controller;
 
 import com.example.csdaily.quiz.dto.QuizResponseDto;
-import com.example.csdaily.quiz.entity.Quiz;
 import com.example.csdaily.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
