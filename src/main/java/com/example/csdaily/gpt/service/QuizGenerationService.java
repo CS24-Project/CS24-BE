@@ -18,7 +18,6 @@ import com.example.csdaily.gpt.dto.response.GPTResponse;
 public class QuizGenerationService {
 	private final Logger logger = LoggerFactory.getLogger(QuizGenerationService.class);
 
-	//todo: Bean으로 등록된 객체 사용하기
 	private final RestTemplate restTemplate;
 	private GPTResponse gptResponse;
 
@@ -33,8 +32,8 @@ public class QuizGenerationService {
 
 	private final String cronSyntax = "0 * * * * *";
 
-	public QuizGenerationService() {
-		this.restTemplate = new RestTemplate();
+	public QuizGenerationService(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
 		this.restTemplate.getInterceptors().add((request, body, execution) -> {
 			request.getHeaders().add("Authorization", "Bearer " + apiKey);
 			return execution.execute(request, body);
