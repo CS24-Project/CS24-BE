@@ -12,6 +12,6 @@ public class QuizGenerationTestController {
 
 	@GetMapping("/api/v1/quiz/generate")
 	public void foo() {
-		quizGenerationService.generateQuizUsingGPT();
+		quizGenerationService.generate();
 	}
 }

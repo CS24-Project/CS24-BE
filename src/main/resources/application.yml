@@ -39,8 +39,18 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    defer-datasource-initialization: true
 
 kakao:
   client-id: ${KAKAO_CLIENT_ID}
   client-secret: ${KAKAO_CLIENT_SECRET}
   redirect-uri: ${KAKAO_REDIRECT_URI}
+
+gpt:
+  url: https://api.openai.com/v1/chat/completions
+  model: ${OPENAI_API_MODEL}
+  n: ${OPENAI_API_N}
+  api-key: ${OPENAI_API_KEY}
+  prompt:
+    system: ${OPENAI_API_PROMPT_SYSTEM}
+    user: ${OPENAI_API_PROMPT_USER}

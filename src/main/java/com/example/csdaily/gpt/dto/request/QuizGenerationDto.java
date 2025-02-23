@@ -4,5 +4,5 @@ import java.util.List;
 
 import com.example.csdaily.gpt.dto.GPTMessageDto;
 
-public record QuizGenerationDto(String model, List<GPTMessageDto> messages) {
+public record QuizGenerationDto(String model, int n, List<GPTMessageDto> messages) {
 }
