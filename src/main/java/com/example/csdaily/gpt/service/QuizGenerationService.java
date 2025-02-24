@@ -1,11 +1,10 @@
 package com.example.csdaily.gpt.service;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,11 @@ import com.example.csdaily.quiz.repository.QuizChoiceRepository;
 import com.example.csdaily.quiz.repository.QuizRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class QuizGenerationService {
-	private final Logger logger = LoggerFactory.getLogger(QuizGenerationService.class);
 
 	private final RestTemplate restTemplate;
 	private final QuizRepository quizRepository;
@@ -67,15 +68,23 @@ public class QuizGenerationService {
 		});
 	}
 
-	@Scheduled(cron = "0 0 12 * * *")
+	@Scheduled(cron = "0 0 * * * *")
 	public void generate() {
 		// todo: 로그를 aop로 하는 방법?
-		logger.info("Quiz generation start.");
+		log.info("Quiz generation start.");
 		setup();
+		if (isTodayQuizAlreadyGenerated()) {
+			log.info("오늘의 퀴즈가 이미 생성되었습니다.");
+			return;
+		}
 		sendRequest();
 		saveResponse();
-		logger.info("Quiz generation finished.");
-		createdQuizzes.forEach(quiz -> logger.info("Generated quiz : {}", quiz.getContent()));
+		log.info("Quiz generation finished.");
+		createdQuizzes.forEach(quiz -> log.info("Generated quiz : {}", quiz.getContent()));
+	}
+
+	private boolean isTodayQuizAlreadyGenerated() {
+		return quizRepository.existsQuizByCreatedAt(LocalDate.now());
 	}
 
 	private void setup() {
@@ -95,7 +104,7 @@ public class QuizGenerationService {
 			gptResponse = restTemplate.postForEntity(URI.create(url), quizGenerationDto, GPTResponse.class).getBody();
 		} catch (RestClientException e) {
 			//todo: 에러 메세지 핸들링 필요.
-			logger.error("GPT API 요청 실패!");
+			log.error("GPT API 요청 실패!");
 			throw new RuntimeException(e);
 		}
 	}
