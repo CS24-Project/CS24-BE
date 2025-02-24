@@ -48,8 +48,8 @@ public class QuizGenerationService {
 	@Value("${gpt.api-key}")
 	private String apiKey;
 
-	@Value("${gpt.prompt.system}")
-	private String systemMessage;
+	@Value("${gpt.prompt.developer}")
+	private String developerMessage;
 
 	@Value("${gpt.prompt.user}")
 	private String userMessage;
@@ -84,9 +84,9 @@ public class QuizGenerationService {
 		createdQuizzes = new ArrayList<>();
 		createdQuizChoices = new ArrayList<>();
 		if (quizGenerationDto == null) {
-			GPTMessageDto systemMessageDto = new GPTMessageDto("system", systemMessage);
+			GPTMessageDto developerMessageDto = new GPTMessageDto("developer", developerMessage);
 			GPTMessageDto userMessageDto = new GPTMessageDto("user", userMessage);
-			quizGenerationDto = new QuizGenerationDto(model, n, List.of(systemMessageDto, userMessageDto));
+			quizGenerationDto = new QuizGenerationDto(model, n, List.of(developerMessageDto, userMessageDto));
 		}
 	}
 
