@@ -2,6 +2,25 @@ server:
   port: 8080
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope: profile_nickname, profile_image, account_email
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://studentvote2.cz4muuwq2azg.ap-northeast-2.rds.amazonaws.com:3306/studentvote?serverTimezone=Asia/Seoul
@@ -20,8 +39,18 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    defer-datasource-initialization: true
 
 kakao:
   client-id: ${KAKAO_CLIENT_ID}
   client-secret: ${KAKAO_CLIENT_SECRET}
   redirect-uri: ${KAKAO_REDIRECT_URI}
+
+gpt:
+  url: https://api.openai.com/v1/chat/completions
+  model: ${OPENAI_API_MODEL}
+  n: ${OPENAI_API_N}
+  api-key: ${OPENAI_API_KEY}
+  prompt:
+    system: ${OPENAI_API_PROMPT_SYSTEM}
+    user: ${OPENAI_API_PROMPT_USER}
