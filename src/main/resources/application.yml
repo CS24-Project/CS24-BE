@@ -52,5 +52,5 @@ gpt:
   n: ${OPENAI_API_N}
   api-key: ${OPENAI_API_KEY}
   prompt:
-    system: ${OPENAI_API_PROMPT_SYSTEM}
+    developer: ${OPENAI_API_PROMPT_DEVELOPER}
     user: ${OPENAI_API_PROMPT_USER}
