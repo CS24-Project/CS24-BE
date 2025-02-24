@@ -13,4 +13,6 @@ import java.util.List;
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
     @Query("SELECT DISTINCT q FROM Quiz q JOIN FETCH q.choices qc WHERE q.createdAt = :createdAt")
     List<Quiz> findAllInCreatedAtEquals(@Param("createdAt") LocalDate createdAt);
+
+    boolean existsQuizByCreatedAt(LocalDate date);
 }
