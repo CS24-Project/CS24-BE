@@ -27,6 +27,6 @@ public class UserAnswer {
     private Quiz quiz;
 
     @JoinColumn
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private QuizChoice choice;
 }

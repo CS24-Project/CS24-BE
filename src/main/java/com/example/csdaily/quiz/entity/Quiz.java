@@ -30,6 +30,12 @@ public class Quiz {
     @Column
     private String hint;
 
+    @Column
+    private String extraInfo;
+
+    @Column
+    private String conclusion;
+
     @Column(name="difficulty")
     @Convert(converter= QuizDifficultyConverter.class)
     private QuizDifficulty difficulty;

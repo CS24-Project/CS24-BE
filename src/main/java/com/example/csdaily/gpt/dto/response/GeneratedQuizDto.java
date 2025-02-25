@@ -6,7 +6,7 @@ import java.util.List;
 import com.example.csdaily.quiz.entity.Quiz;
 import com.example.csdaily.quiz.entity.QuizDifficulty;
 
-public record GeneratedQuizDto(String difficulty, String content, String hint, List<GeneratedQuizChoiceDto> choices, String extra, String conclusion) {
+public record GeneratedQuizDto(String difficulty, String content, String hint, List<GeneratedQuizChoiceDto> choices, String extraInfo, String conclusion) {
 	public Quiz toQuiz() {
 		return Quiz
 			.builder()
@@ -14,6 +14,8 @@ public record GeneratedQuizDto(String difficulty, String content, String hint, L
 			.content(content)
 			.difficulty(QuizDifficulty.valueOf(difficulty.toUpperCase()))
 			.hint(hint)
+			.extraInfo(extraInfo)
+			.conclusion(conclusion)
 			.build();
 	}
 }
