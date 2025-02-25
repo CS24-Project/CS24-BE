@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.csdaily.gpt.dto.GPTMessageDto;
-import com.example.csdaily.gpt.dto.request.QuizGenerationDto;
 import com.example.csdaily.gpt.dto.response.GPTResponse;
 import com.example.csdaily.gpt.dto.response.GeneratedQuizDto;
 import com.example.csdaily.quiz.entity.Quiz;
@@ -31,8 +32,8 @@ public class QuizGenerationService {
 	private final QuizRepository quizRepository;
 	private final QuizChoiceRepository quizChoiceRepository;
 	private final ObjectMapper objectMapper;
+	private final HttpEntity<String> requestEntity;
 	private GPTResponse gptResponse;
-	private QuizGenerationDto quizGenerationDto;
 	private List<GeneratedQuizDto> generatedQuizDtos;
 	private List<Quiz> createdQuizzes;
 	private List<QuizChoice> createdQuizChoices;
@@ -40,20 +41,11 @@ public class QuizGenerationService {
 	@Value("${gpt.url}")
 	private String url;
 
-	@Value("${gpt.model}")
-	private String model;
-
-	@Value("${gpt.n}")
-	private int n;
-
 	@Value("${gpt.api-key}")
 	private String apiKey;
 
-	@Value("${gpt.prompt.developer}")
-	private String developerMessage;
-
-	@Value("${gpt.prompt.user}")
-	private String userMessage;
+	@Value("${gpt.prompt}")
+	private String prompt;
 
 	public QuizGenerationService(RestTemplate restTemplate, QuizRepository quizRepository,
 		QuizChoiceRepository quizChoiceRepository) {
@@ -62,10 +54,10 @@ public class QuizGenerationService {
 		this.quizChoiceRepository = quizChoiceRepository;
 		this.objectMapper = new ObjectMapper();
 
-		this.restTemplate.getInterceptors().add((request, body, execution) -> {
-			request.getHeaders().add("Authorization", "Bearer " + apiKey);
-			return execution.execute(request, body);
-		});
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(apiKey);
+		this.requestEntity = new HttpEntity<>(prompt, headers);
 	}
 
 	@Scheduled(cron = "0 0 * * * *")
@@ -92,16 +84,11 @@ public class QuizGenerationService {
 		generatedQuizDtos = null;
 		createdQuizzes = new ArrayList<>();
 		createdQuizChoices = new ArrayList<>();
-		if (quizGenerationDto == null) {
-			GPTMessageDto developerMessageDto = new GPTMessageDto("developer", developerMessage);
-			GPTMessageDto userMessageDto = new GPTMessageDto("user", userMessage);
-			quizGenerationDto = new QuizGenerationDto(model, n, List.of(developerMessageDto, userMessageDto));
-		}
 	}
 
 	private void sendRequest() {
 		try {
-			gptResponse = restTemplate.postForEntity(URI.create(url), quizGenerationDto, GPTResponse.class).getBody();
+			gptResponse = restTemplate.postForEntity(URI.create(url), requestEntity, GPTResponse.class).getBody();
 		} catch (RestClientException e) {
 			//todo: 에러 메세지 핸들링 필요.
 			log.error("GPT API 요청 실패!");
