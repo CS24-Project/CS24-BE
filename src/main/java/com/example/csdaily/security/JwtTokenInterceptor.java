@@ -22,7 +22,13 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		String accessToken = request.getHeader("Authorization").replace("Bearer ", "");
+		String authorizationHeader = request.getHeader("Authorization");
+		if (authorizationHeader == null) {
+			request.setAttribute("user", null);
+			return true;
+		}
+
+		String accessToken = authorizationHeader.replace("Bearer ", "");
 		log.info("Access token : {}", accessToken);
 
 		Long userId = jwtTokenProvider.getUserIdFromAccessToken(accessToken);
