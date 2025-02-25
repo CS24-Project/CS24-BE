@@ -33,25 +33,13 @@ public class QuizService {
 		return quizRepository.findAllInCreatedAtEquals(LocalDate.now());
 	}
 
-	public List<QuizResultDto> submitUserAnswer(User user, List<UserAnswerDto> userAnswerDtos) {
+	public List<UserAnswer> submitUserAnswer(User user, List<UserAnswerDto> userAnswerDtos) {
 		updateQuizMapAndQuizChoiceMapForToday();
-		List<UserAnswer> savedUserAnswers = saveUserAnswer(user, userAnswerDtos);
-		return checkUserAnswerCorrectness(savedUserAnswers);
-	}
-
-	public List<UserAnswer> saveUserAnswer(User user, List<UserAnswerDto> userAnswerDtos) {
 		if (userAnswerRepository.existsByQuizEqualsCreatedAtToToday(user, LocalDate.now())) {
 			// todo: 적절한 예외 클래스 필요
 			throw new RuntimeException("이미 문제를 풀었습니다!");
 		}
-
-		List<UserAnswer> userAnswers = userAnswerDtos.stream().map(userAnswerDto -> {
-			Quiz quiz = quizMap.get(userAnswerDto.quizId());
-			QuizChoice quizChoice = quizChoiceMap.get(userAnswerDto.quizChoiceId());
-			return userAnswerDto.toUserAnswer(user, quiz, quizChoice);
-		}).toList();
-
-		return userAnswerRepository.saveAll(userAnswers);
+		return saveUserAnswer(user, userAnswerDtos);
 	}
 
 	private void updateQuizMapAndQuizChoiceMapForToday() {
@@ -68,9 +56,13 @@ public class QuizService {
 		}
 	}
 
-	public List<QuizResultDto> checkUserAnswerCorrectness(List<UserAnswer> userAnswers) {
-		return userAnswers.stream()
-			.map(userAnswer -> new QuizResultDto(userAnswer.getQuiz().getId(), userAnswer.getChoice().isCorrect()))
-			.toList();
+	public List<UserAnswer> saveUserAnswer(User user, List<UserAnswerDto> userAnswerDtos) {
+		List<UserAnswer> userAnswers = userAnswerDtos.stream().map(userAnswerDto -> {
+			Quiz quiz = quizMap.get(userAnswerDto.quizId());
+			QuizChoice quizChoice = quizChoiceMap.get(userAnswerDto.quizChoiceId());
+			return userAnswerDto.toUserAnswer(user, quiz, quizChoice);
+		}).toList();
+
+		return userAnswerRepository.saveAll(userAnswers);
 	}
 }
