@@ -1,8 +1,10 @@
 package com.example.csdaily.security;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -21,12 +23,27 @@ public class JwtTokenProvider {
         this.SECRET_KEY = Keys.hmacShaKeyFor(base64Secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String userId) {
-        return Jwts.builder()
-                .setSubject(userId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
-                .compact();
-    }
+	public String generateToken(String userId) {
+		return Jwts.builder()
+			.setSubject(userId)
+			.setIssuedAt(new Date())
+			.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+			.signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+			.compact();
+	}
+
+	public long getUserIdFromAccessToken(String accessToken) {
+		try {
+			String id = Jwts.parserBuilder()
+				.setSigningKey(SECRET_KEY)
+				.build()
+				.parseClaimsJws(accessToken)
+				.getBody()
+				.getSubject();
+			return Long.parseLong(id);
+		} catch (JwtException e) {
+			e.printStackTrace();
+		}
+		return 0L;
+	}
 }

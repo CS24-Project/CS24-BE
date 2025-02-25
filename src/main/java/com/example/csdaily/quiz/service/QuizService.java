@@ -22,8 +22,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class QuizService {
-
-	private final UserRepository userRepository;
 	private final QuizRepository quizRepository;
 	private final UserAnswerRepository userAnswerRepository;
 
@@ -35,28 +33,23 @@ public class QuizService {
 		return quizRepository.findAllInCreatedAtEquals(LocalDate.now());
 	}
 
-	public List<QuizResultDto> submitUserAnswer(List<UserAnswerDto> userAnswerDtos) {
+	public List<QuizResultDto> submitUserAnswer(User user, List<UserAnswerDto> userAnswerDtos) {
 		updateQuizMapAndQuizChoiceMapForToday();
-		List<UserAnswer> savedUserAnswers = saveUserAnswer(userAnswerDtos);
+		List<UserAnswer> savedUserAnswers = saveUserAnswer(user, userAnswerDtos);
 		return checkUserAnswerCorrectness(savedUserAnswers);
 	}
 
-	public List<UserAnswer> saveUserAnswer(List<UserAnswerDto> userAnswerDtos) {
-		// todo: 로그인한 유저 정보 획득 필요함. 현재는 mock 객체를 만들어 사용함.
-		User user = userRepository.findByKakaoId("kakao").get();
-
+	public List<UserAnswer> saveUserAnswer(User user, List<UserAnswerDto> userAnswerDtos) {
 		if (userAnswerRepository.existsByQuizEqualsCreatedAtToToday(user, LocalDate.now())) {
 			// todo: 적절한 예외 클래스 필요
 			throw new RuntimeException("이미 문제를 풀었습니다!");
 		}
 
-		List<UserAnswer> userAnswers = userAnswerDtos.stream()
-			.map(userAnswerDto -> {
-				Quiz quiz = quizMap.get(userAnswerDto.quizId());
-				QuizChoice quizChoice = quizChoiceMap.get(userAnswerDto.quizChoiceId());
-				return userAnswerDto.toUserAnswer(user, quiz, quizChoice);
-			})
-			.toList();
+		List<UserAnswer> userAnswers = userAnswerDtos.stream().map(userAnswerDto -> {
+			Quiz quiz = quizMap.get(userAnswerDto.quizId());
+			QuizChoice quizChoice = quizChoiceMap.get(userAnswerDto.quizChoiceId());
+			return userAnswerDto.toUserAnswer(user, quiz, quizChoice);
+		}).toList();
 
 		return userAnswerRepository.saveAll(userAnswers);
 	}
@@ -76,7 +69,8 @@ public class QuizService {
 	}
 
 	public List<QuizResultDto> checkUserAnswerCorrectness(List<UserAnswer> userAnswers) {
-		return userAnswers.stream().map(userAnswer -> new QuizResultDto(
-			userAnswer.getQuiz().getId(), userAnswer.getChoice().isCorrect())).toList();
+		return userAnswers.stream()
+			.map(userAnswer -> new QuizResultDto(userAnswer.getQuiz().getId(), userAnswer.getChoice().isCorrect()))
+			.toList();
 	}
 }
