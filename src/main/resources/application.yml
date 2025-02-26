@@ -48,9 +48,5 @@ kakao:
 
 gpt:
   url: https://api.openai.com/v1/chat/completions
-  model: ${OPENAI_API_MODEL}
-  n: ${OPENAI_API_N}
   api-key: ${OPENAI_API_KEY}
-  prompt:
-    developer: ${OPENAI_API_PROMPT_DEVELOPER}
-    user: ${OPENAI_API_PROMPT_USER}
+  prompt: ${OPENAI_API_PROMPT}
