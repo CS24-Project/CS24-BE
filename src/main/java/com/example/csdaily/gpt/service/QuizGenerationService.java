@@ -32,7 +32,7 @@ public class QuizGenerationService {
 	private final QuizRepository quizRepository;
 	private final QuizChoiceRepository quizChoiceRepository;
 	private final ObjectMapper objectMapper;
-	private final HttpEntity<String> requestEntity;
+	private HttpEntity<String> requestEntity;
 	private GPTResponse gptResponse;
 	private List<GeneratedQuizDto> generatedQuizDtos;
 	private List<Quiz> createdQuizzes;
@@ -53,11 +53,6 @@ public class QuizGenerationService {
 		this.quizRepository = quizRepository;
 		this.quizChoiceRepository = quizChoiceRepository;
 		this.objectMapper = new ObjectMapper();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.setBearerAuth(apiKey);
-		this.requestEntity = new HttpEntity<>(prompt, headers);
 	}
 
 	@Scheduled(cron = "0 0 * * * *")
@@ -84,6 +79,11 @@ public class QuizGenerationService {
 		generatedQuizDtos = null;
 		createdQuizzes = new ArrayList<>();
 		createdQuizChoices = new ArrayList<>();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(apiKey);
+		requestEntity = new HttpEntity<>(prompt, headers);
 	}
 
 	private void sendRequest() {
